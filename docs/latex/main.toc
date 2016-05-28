@@ -1,0 +1,16 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{2}
+\contentsline {subsection}{\numberline {1.1}About Vaspirin}{2}
+\contentsline {subsection}{\numberline {1.2}Installation}{2}
+\contentsline {section}{\numberline {2}Running Vaspirin}{2}
+\contentsline {subsection}{\numberline {2.1}Flags}{2}
+\contentsline {subsection}{\numberline {2.2}Standards requiring manual entry}{3}
+\contentsline {section}{\numberline {3}Tutorial}{4}
+\contentsline {subsection}{\numberline {3.1}Plotting standard band structures}{4}
+\contentsline {subsection}{\numberline {3.2}Plotting band structures projected on orbitals}{5}
+\contentsline {subsection}{\numberline {3.3}Plotting band structures projected on specific ions}{6}
+\contentsline {subsection}{\numberline {3.4}Comparing two different band structures}{8}
+\contentsline {section}{\numberline {4}Other results}{9}
+\contentsline {subsection}{\numberline {4.1}Standard density of states with \texttt {-pyplot}}{9}
+\contentsline {subsection}{\numberline {4.2}Standard band structure with \texttt {-pyplot}}{9}
+\contentsline {subsection}{\numberline {4.3}BS + DOS plot with \texttt {-pyplot}}{10}
