@@ -50,13 +50,13 @@ class Crystal (object):
 		be the first line in the file.
 		"""
 		try:
-			with f as open (self.filename, 'r'):
+			with open (self.filename, 'r') as f:
 				lines = f.readlines()
 		except FileNotFoundError:
 			print ("File " + self.filename + "not found! Please check the arguments!\n")
 			sys.exit(1)
 		
-		return lines[0]
+		return lines[0].strip('\n')
 	
 	def getNatoms (self):
 		"""
@@ -65,7 +65,7 @@ class Crystal (object):
 		"""
 		
 		try:
-			with f as open (self.filename, 'r'):
+			with open (self.filename, 'r') as f:
 				lines = f.readlines()
 		except FileNotFoundError:
 			print ("File " + self.filename + "not found! Please check the arguments!\n")
@@ -96,7 +96,7 @@ class Crystal (object):
 		BravaisLattices = ['oblique', 'rectangular', 'hexagonal','square']
 		
 		try:
-			with f as open (self.filename, 'r'):
+			with open (self.filename, 'r') as f:
 				lines = f.readlines()
 		except FileNotFoundError:
 			print ("File " + self.filename + "not found! Please check the arguments!\n")
@@ -109,11 +109,11 @@ class Crystal (object):
 		else:
 			try:
 				# Removes whitespace when reading
-				BravaisParameters = [x for x in lines[3].split().strip('\n') if x]
+				BravaisParameters = [x for x in lines[3].split() if x]
 				# Convert the strings to float
 				BravaisParameters = [float(x) for x in BravaisParameters]
 			except ValueError:
-				print ("Wrong entry for description of the Bravais lattice: " + lines[3].strip('\n') " for file" + self.filename + "\n")
+				print ("Wrong entry for description of the Bravais lattice: " + lines[3].strip('\n') + " for file" + self.filename + "\n")
 				sys.exit(5)
 			
 			if not BravaisParameters:
@@ -122,35 +122,43 @@ class Crystal (object):
 				
 			if latticeName == 'square':
 				try:
-					lattice = np.array	([[BravaisParameters[0], 0],
-									 [0, BravaisParameters[0]])
+					lattice = np.transpose(
+							np.matrix	([[BravaisParameters[0], 0],
+										 [0, BravaisParameters[0]]])
+										 )
 				except IndexError:
 					print ("Not enough parameters to describe the Bravais lattice for file" + self.filename + "\n")
 					print ("Square lattices require one parameter (a) to be entirely described\n")
 					sys.exit(7)
 					
-			else if latticeName == 'rectangular':
+			elif latticeName == 'rectangular':
 				try:
-					lattice = np.array	([[BravaisParameters[0], 0],
-										 [0, BravaisParameters[1]])
+					lattice = np.transpose(
+							np.matrix	([[BravaisParameters[0], 0],
+										 [0, BravaisParameters[1]]])
+										 )
 				except IndexError:
 					print ("Not enough parameters to describe the Bravais lattice for file" + self.filename + "\n")
 					print ("Rectangular lattices require two parameters (ax, ay) to be entirely described\n")
 					sys.exit(8)
 			
-			else if latticeName == 'hexagonal':
+			elif latticeName == 'hexagonal':
 				try:
-					lattice = np.array	([[BravaisParameters[0], 0],
+					lattice = np.transpose(
+							np.matrix	([[BravaisParameters[0], 0],
 										 [BravaisParameters[0]*np.cos(np.pi/3), BravaisParameters[0]*np.sin(np.pi/3)]])
+										 )
 				except IndexError:
 					print ("Not enough parameters to describe the Bravais lattice for file" + self.filename + "\n")
 					print ("Hexagonal lattices require one parameters (a) to be entirely described\n")
 					sys.exit(9)
 					
-			else if latticeName == 'oblique':
+			elif latticeName == 'oblique':
 				try:
-					lattice = np.array	([[BravaisParameters[0], 0],
+					lattice = np.transpose(
+							np.matrix	([[BravaisParameters[0], 0],
 										 [BravaisParameters[1]*np.cos(BravaisParameters[2]*np.pi/180), BravaisParameters[1]*np.sin(BravaisParameters[2]*np.pi/180)]])
+										 )
 				except IndexError:
 					print ("Not enough parameters to describe the Bravais lattice for file" + self.filename + "\n")
 					print ("Oblique lattices require three parameters (a1, a2, angle) to be entirely described\n")
