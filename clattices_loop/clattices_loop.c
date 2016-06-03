@@ -20,14 +20,14 @@ static char clattices_loop_docstring[] =
 /* Loop for finding coincidence lattices module in C to be called from Python */
 static PyObject* clattices_loop (PyObject* self, PyObject* args)
 {
-	double angle_start, angle_end, angle_step, tolerance;
+	double angle_start, angle_end, angle_step, tolerance, angle_tolerance;
 	int Nmax;
 	
 	/* Parse the input tuple */
-    if (!PyArg_ParseTuple(args, "dddid", &angle_start, &angle_end, &angle_step, &Nmax, &tolerance))
+    if (!PyArg_ParseTuple(args, "dddidd", &angle_start, &angle_end, &angle_step, &Nmax, &tolerance, &angle_tolerance))
         return NULL;
         
-    loop (angle_start, angle_end, angle_step, Nmax, tolerance);	
+    loop (angle_start, angle_end, angle_step, Nmax, tolerance, angle_tolerance);	
 	return Py_None;
 }
 
@@ -46,7 +46,7 @@ static struct PyModuleDef moduledef = {
         PyModuleDef_HEAD_INIT,
         "clattices_loop",
         module_docstring,
-        sizeof(struct module_state),
+        5*sizeof(double) + 1*sizeof(int),
         clattices_loop_methods,
         NULL,
         NULL,

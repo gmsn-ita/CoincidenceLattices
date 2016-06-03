@@ -39,6 +39,11 @@ class Crystal (object):
 		The number of atoms inside the 2D crystal unit cell.
 		"""
 		
+		self.bravaisLattice = ""
+		"""
+		The Bravais lattice of the 2D crystal: square, rectangular, oblique and hexagonal.
+		"""
+		
 		self.latticeVectors = self.getBravaisLattice ()
 		"""
 		The Bravais lattice of the 2D crystal denoted by the matrix A (or B) shown Eq. 11 of the paper.
@@ -119,7 +124,9 @@ class Crystal (object):
 			if not BravaisParameters:
 				print ("Not enough parameters to describe the Bravais lattice for file" + self.filename + "\n")
 				sys.exit(6)
-				
+			
+			self.bravaisLattice = latticeName
+			
 			if latticeName == 'square':
 				try:
 					lattice = np.transpose(

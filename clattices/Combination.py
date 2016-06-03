@@ -1,5 +1,8 @@
 import numpy as np
 import sys
+import clattices_loop
+import re
+import os
 
 class Solution (object):
 	"""
@@ -203,14 +206,23 @@ class Combination (object):
 			
 		try:
 			self.Nmax = limits[0]
-			self.tolerance = limits[1]
 			"""
 			The stopping criteria for the calculation
+			"""
+			self.tolerance = limits[1]
+			"""
+			The maximum strain allowed for determining coincidences
+			"""
+			self.angle_tolerance = limits[2]
+			"""
+			Tolerance for approximating angles for the lattice vectors
 			"""
 		except IndexError:
 			print ("Limits not enough to calculate the combination: a list [Nmax, tolerance] is required\n")
 			sys.exit(13)
+			
 		
+			
 		self.allSolutions = []
 		"""
 		List of all Solutions (m1, m2, n1, n2) of coincidences for the given crystals.
@@ -225,8 +237,8 @@ class Combination (object):
 		self.areaUnitCell = min (abs(np.linalg.det(self.crystal_1.latticeVectors)), abs(np.linalg.det(self.crystal_2.latticeVectors)))
 		"""
 		Useful information for knowing which is the minimum area allowed for the supercell.
-		"""
-		
+		"""		
+	
 	def rotationMatrix (self, angle):
 		"""
 		Returns a rotation matrix M (eq. 10) for the given angle in degrees
@@ -236,48 +248,41 @@ class Combination (object):
 		
 		return M
 		
-	def findSolutionsAngle (self, angle):
-		"""
-		Solves the eq. 11 to find all solutions (m1, m2, n1, n2) of coincidences for the given crystals and a specific angle.
-		All solutions (vectors in Z^4) are appended to a list and are used later.
-		A big loop is used to compute every possibility.
-		"""
-		
-		s = Solution (angle)
-		
-		# For increasing the speed
-		N = self.Nmax
-		
-		# Big loop
-		for m1 in range (-N, N):
-			for m2 in range (-N, N):
-				for n1 in range (-N, N):
-					for n2 in range (-N, N):
-						# Denoting as in eq. 11
-						Am = self.crystal_1.latticeVectors*np.matrix([[m1],[m2]])
-						MBn = self.rotationMatrix(angle)*self.crystal_2.latticeVectors*np.matrix([[n1],[n2]])
-						print(str(m1) + " " + str(m2) + " " + str(n1) + " " + str(n2))
-						coincidence = Am - MBn
-						
-						normMin = min(np.linalg.norm(Am), np.linalg.norm(MBn))
-						if normMin > 0:
-							# The condition is satisfied if the relative strain is inferior to the tolerance imposed
-							if abs(coincidence[0]/normMin) <= self.tolerance and abs(coincidence[1]/normMin) <= self.tolerance:
-								s.solutions.append ([m1,m2,n1,n2])
-		
-		return s
-	
 	def findSolutions (self):		
 		"""
 		Solves the eq. 11 to find solutions (m1, m2, n1, n2) of coincidences for the given crystals and all angles.
 		All solutions are lists of the type `[[angle_1, solutions_list], [angle_2, solutions_list], ...]`
+		This method calls an extension built in C to speed the calculations, namely `clattices_loop`
 		"""
 		
 		self.allSolutions = []
 		
-		for angle in self.angles:
-			print (angle)
-			self.allSolutions.append (self.findSolutionsAngle(angle))
+		# Print the lattice into a temporary file for the extension
+		with open ("lattices.tmp", "w") as f:
+			A = self.crystal_1.latticeVectors
+			B = self.crystal_2.latticeVectors
+			f.write ("%lf %lf \n%lf %lf\n" % (A.item(0,0), A.item(0,1), A.item(1,0), A.item(1,1)))
+			f.write ("%lf %lf \n%lf %lf\n" % (B.item(0,0), B.item(0,1), B.item(1,0), B.item(1,1)))
+			
+		# Call the extension
+		clattices_loop.clattices_loop (self.angles[0], self.angles[1], self.angles[2], self.Nmax, self.tolerance, self.angle_tolerance)
+		
+		# Read the solutions
+		with open ("coincidences.tmp", 'r') as f:
+			anglesBlock = [x for x in f.read().split('\n\n') if x]
+			
+			for x in anglesBlock:
+				lines = x.split('\n')
+				
+				s = Solution(float (lines.pop(0)))
+				for eachLine in lines:
+					if eachLine:
+						s.solutions.append([int (y) for y in eachLine.strip('\n').split(' ') if y])
+				
+				self.allSolutions.append(s)
+		
+		os.remove("lattices.tmp")
+		os.remove("coincidences.tmp")
 		
 		return self.allSolutions
 	
@@ -286,6 +291,9 @@ class Combination (object):
 		Finds a pair of linearly independent solutions (m1, m2, n1, n2), (m1', m2', n1', n2')
 		which has minimum area. For each angle, minimizes |m x m'|. 
 		"""
+		
+		a1 = self.crystal_1.latticeVectors[:,0]
+		a2 = self.crystal_1.latticeVectors[:,1]
 		
 		self.supercell = []
 		for s in self.allSolutions:
@@ -297,17 +305,32 @@ class Combination (object):
 				for j in range (i+1, len (s.solutions)):
 					m1 = s.solutions[i][0]
 					m2 = s.solutions[i][1]
+					
 					m1_prime = s.solutions[j][0]
 					m2_prime = s.solutions[j][1]
 					
+					Am = m1*a1 + m2*a2
+					Am_prime = m1_prime*a1 + m2_prime*a2
+					
 					area = m1*m2_prime - m1_prime*m2
 					
-					#~ normM = np.sqrt(m1**2 + m2**2)
-					#~ normM_prime = np.sqrt(m1_prime**2 + m2_prime**2)
+					normAm = np.linalg.norm(Am)
+					normAm_prime = np.linalg.norm(Am_prime)
 					
-					#~ angleVectors = np.arcsin(area/(normM*normM_prime))*180/np.pi
-
-					if  area >= 1 and area < minArea:
+					# To prevent rounding errors when using arcsin
+					cosAngleVectors = (np.transpose(Am)*Am_prime).item(0,0)/(normAm*normAm_prime)
+					if cosAngleVectors > 1:
+						cosAngleVectors = 1
+					elif cosAngleVectors < -1:
+						cosAngleVectors = -1
+						
+					angleVectors = np.arccos(cosAngleVectors)*180/np.pi
+					
+					if self.crystal_1.bravaisLattice == "hexagonal" and self.crystal_2.bravaisLattice == "hexagonal":
+						if  area >= 1 and area < minArea and abs(angleVectors - 60) < self.tolerance:
+							minArea = area
+							minAreaPair = [s.solutions[i], s.solutions[j]]
+					elif  area >= 1 and area < minArea:
 						minArea = area
 						minAreaPair = [s.solutions[i], s.solutions[j]]
 			
