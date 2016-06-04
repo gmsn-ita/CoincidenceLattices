@@ -4,7 +4,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 
     <title>clattices API documentation</title>
-    <meta name="description" content="" />
+    <meta name="description" content="`clattices` is a Python module for calculating coincidence lattices for pairs of 2D crystals.
+Its me..." />
 
   <link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300' rel='stylesheet' type='text/css'>
   
@@ -1058,11 +1059,134 @@ table {
 
   <header id="section-intro">
   <h1 class="title"><span class="name">clattices</span> module</h1>
-  
+  <p><code>clattices</code> is a Python module for calculating coincidence lattices for pairs of 2D crystals.
+Its methodology is described in [1] and is distributed as a complement to the article.</p>
+<p>The <code>clattices</code> command line interface requires a set of 2D crystals as input and returns a table with
+favorable coincidences. Each crystal is described using discrete files with a standard and is loaded 
+within the class <code>Crystal</code>. Then, classes <code>Coincidences</code> are created for each pair of crystals and coincidence
+lattices are investigated. Finally, all results are printed with the <code>Printer</code> class.</p>
+<p>Important parameters should also be supplied to the <code>clattices</code> module in order to calculate
+coincidence lattices of interest, such as:</p>
+<ol>
+<li>
+<p>Range of angles to investigate;</p>
+</li>
+<li>
+<p>Maximum strains necessary to make the system commensurate;</p>
+</li>
+<li>
+<p>Maximum supercell length;</p>
+</li>
+<li>
+<p>Number of atoms inside the supercell.</p>
+</li>
+</ol>
+<p>To calculate the coincidence lattices, <code>clattices</code> solves the system of diophantine described in eq. 11 of [1]
+by brute force. This requires a C module to speeds the process, which is called <code>clattices_loop</code>. The installation
+of the <code>clattices</code> module itself requires the installation of the <code>clattices_loop</code> module.</p>
+<p>[1] - Daniel S. Koda, Friedhelm Bechstedt, Marcelo Marques, and Lara K. Teles. Coincidence Lattices of 2D Crystals: Heterostructure Predictions and Applications. <em>The Journal of Physical Chemistry C</em> <strong>2016</strong> <em>120</em> (20), 10895-10908. DOI: 10.1021/acs.jpcc.6b01496</p>
+<h2>Installation</h2>
+<p>Installing <code>clattices</code> is pretty straightforward. Make sure you have the <code>numpy</code>, <code>argparse</code> and <code>re</code> packages installed
+and run as superuser:</p>
+<div class="codehilite"><pre><span></span>    python setup.py install
+</pre></div>
+
+
+<h2>Usage</h2>
+<p>To use <code>clattices</code>, follow the steps:</p>
+<ol>
+<li>Define the set of crystals of interest. The standard for each crystal file is the following:<div class="codehilite"><pre><span></span>Label
+Number of atoms inside the unit cell
+Bravais lattice name (square, rectangular, hexagonal or oblique)
+Necessary parameters to describe the unit cell (one/two lattice parameters and zero/one angle)
+</pre></div>
+
+
+</li>
+</ol>
+<p>Each crystal must be contain the information described above in a plain text file. No extensions are necessary.</p>
+<ol>
+<li>
+<p>Define all parameters to investigate, such as strain, range of angles to be investigated, sampling of angles,
+stopping criterion etc. All of these parameters are summarized when <code>clattices -h</code> or <code>clattices --help</code> is executed.</p>
+</li>
+<li>
+<p>Execute <code>clattices</code> with the parameters. Please note that the software returns mathematical solutions and a physical
+rationale must be employed to interpret whether it corresponds or not to a plausible supercell. Different results can be
+obtained specially by tuning <code>tolerance</code> and <code>angle_tolerance</code>.</p>
+</li>
+</ol>
+<h2>Compatibility</h2>
+<p><code>clattices</code> works properly on Python 3.5.1.</p>
+<h2>Contribution</h2>
+<p><code>clattices</code> is available on GitHub (https://github.com/gmsn-ita/CoincidenceLattices). Suggestions and bug reports are welcome.</p>
   
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-clattices', this);">Show source &equiv;</a></p>
   <div id="source-clattices" class="source">
-    <div class="codehilite"><pre><span></span><span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+    <div class="codehilite"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">`clattices` is a Python module for calculating coincidence lattices for pairs of 2D crystals.</span>
+<span class="sd">Its methodology is described in [1] and is distributed as a complement to the article.</span>
+
+<span class="sd">The `clattices` command line interface requires a set of 2D crystals as input and returns a table with</span>
+<span class="sd">favorable coincidences. Each crystal is described using discrete files with a standard and is loaded </span>
+<span class="sd">within the class `Crystal`. Then, classes `Coincidences` are created for each pair of crystals and coincidence</span>
+<span class="sd">lattices are investigated. Finally, all results are printed with the `Printer` class.</span>
+
+<span class="sd">Important parameters should also be supplied to the `clattices` module in order to calculate</span>
+<span class="sd">coincidence lattices of interest, such as:</span>
+
+<span class="sd">1. Range of angles to investigate;</span>
+
+<span class="sd">2. Maximum strains necessary to make the system commensurate;</span>
+
+<span class="sd">3. Maximum supercell length;</span>
+
+<span class="sd">4. Number of atoms inside the supercell.</span>
+
+<span class="sd">To calculate the coincidence lattices, `clattices` solves the system of diophantine described in eq. 11 of [1]</span>
+<span class="sd">by brute force. This requires a C module to speeds the process, which is called `clattices_loop`. The installation</span>
+<span class="sd">of the `clattices` module itself requires the installation of the `clattices_loop` module.</span>
+
+<span class="sd">[1] - Daniel S. Koda, Friedhelm Bechstedt, Marcelo Marques, and Lara K. Teles. Coincidence Lattices of 2D Crystals: Heterostructure Predictions and Applications. *The Journal of Physical Chemistry C* **2016** *120* (20), 10895-10908. DOI: 10.1021/acs.jpcc.6b01496</span>
+
+<span class="sd">Installation</span>
+<span class="sd">-------------------------------------------------------------------------</span>
+
+<span class="sd">Installing `clattices` is pretty straightforward. Make sure you have the `numpy`, `argparse` and `re` packages installed</span>
+<span class="sd">and run as superuser:</span>
+
+<span class="sd">	python setup.py install</span>
+
+<span class="sd">Usage</span>
+<span class="sd">-------------------------------------------------------------------------</span>
+<span class="sd">To use `clattices`, follow the steps:</span>
+
+<span class="sd">1. Define the set of crystals of interest. The standard for each crystal file is the following:</span>
+
+<span class="sd">	Label</span>
+<span class="sd">	Number of atoms inside the unit cell</span>
+<span class="sd">	Bravais lattice name (square, rectangular, hexagonal or oblique)</span>
+<span class="sd">	Necessary parameters to describe the unit cell (one/two lattice parameters and zero/one angle)</span>
+
+<span class="sd">Each crystal must be contain the information described above in a plain text file. No extensions are necessary.</span>
+
+<span class="sd">2. Define all parameters to investigate, such as strain, range of angles to be investigated, sampling of angles,</span>
+<span class="sd">stopping criterion etc. All of these parameters are summarized when `clattices -h` or `clattices --help` is executed.</span>
+
+<span class="sd">3. Execute `clattices` with the parameters. Please note that the software returns mathematical solutions and a physical</span>
+<span class="sd">rationale must be employed to interpret whether it corresponds or not to a plausible supercell. Different results can be</span>
+<span class="sd">obtained specially by tuning `tolerance` and `angle_tolerance`.</span>
+
+<span class="sd">Compatibility</span>
+<span class="sd">-------------------------------------------------------------------------</span>
+<span class="sd">`clattices` works properly on Python 3.5.1.</span>
+
+<span class="sd">Contribution</span>
+<span class="sd">-------------------------------------------------------------------------</span>
+<span class="sd">`clattices` is available on GitHub (https://github.com/gmsn-ita/CoincidenceLattices). Suggestions and bug reports are welcome.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Crystal&quot;</span><span class="p">,</span> <span class="s2">&quot;Combination&quot;</span><span class="p">,</span> <span class="s2">&quot;Printer&quot;</span><span class="p">]</span>
 </pre></div>
 
