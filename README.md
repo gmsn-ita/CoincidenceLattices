@@ -43,6 +43,8 @@ stopping criterion etc. All of these parameters are summarized when `clattices -
 rationale must be employed to interpret whether it corresponds or not to a plausible supercell. Different results can be
 obtained specially by tuning `tolerance` and `angle_tolerance`.
 
+A step-by-step tutorial can be found in the `docs/` directory as a PDF file.
+
 Compatibility
 --------------
 `clattices` works properly on Python 3.5.1.
