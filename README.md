@@ -9,6 +9,8 @@ Important parameters should also be supplied to the `clattices` module in order 
 3. Maximum supercell length;
 4. Number of atoms inside the supercell.
 
+If you find this software useful for your research, please cite [1].
+
 [1] - Daniel S. Koda, Friedhelm Bechstedt, Marcelo Marques, and Lara K. Teles. Coincidence Lattices of 2D Crystals: Heterostructure Predictions and Applications. *The Journal of Physical Chemistry C* **2016** *120* (20), 10895-10908. DOI: 10.1021/acs.jpcc.6b01496
 
 Installation
