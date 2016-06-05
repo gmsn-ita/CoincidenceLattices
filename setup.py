@@ -2,7 +2,10 @@
 
 from setuptools import setup, Extension
 
-clattices_loop = Extension("clattices.clattices_loop", sources = ["clattices_loop/clattices_loop.c", "clattices_loop/loop.c"])
+clattices_loop = Extension("clattices_loop", 
+							sources = ["clattices_loop/clattices_loop.c", "clattices_loop/loop.c"],
+							depends = ["clattices_loop/loop.h"],
+							)
 
 setup (
 	name='Coincidence Lattices for 2D Crystals',
