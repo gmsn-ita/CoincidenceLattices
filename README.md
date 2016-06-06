@@ -21,6 +21,8 @@ and run as superuser:
 
 	`python setup.py install`
 
+You may have to run the same command on the `clattices_loop` folder in order to make the system work.
+
 Usage
 --------
 To use `clattices`, follow the steps:
