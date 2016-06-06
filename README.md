@@ -19,7 +19,7 @@ Installation
 Installing `clattices` is pretty straightforward. Make sure you have the `numpy`, `argparse` and `re` packages installed
 and run as superuser:
 
-	`python setup.py install`
+	python setup.py install
 
 You may have to run the same command on the `clattices_loop` folder in order to make the system work.
 
@@ -49,7 +49,7 @@ A step-by-step tutorial can be found in the `docs/` directory as a PDF file.
 
 Compatibility
 --------------
-`clattices` works properly on Python 3.5.1.
+`clattices` works properly on Python 3.4 and beyond.
 
 Contribution
 -------------
