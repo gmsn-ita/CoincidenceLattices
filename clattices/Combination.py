@@ -1,6 +1,6 @@
 import numpy as np
 import sys
-from . import clattices_loop
+import clattices_loop
 import re
 import os
 
