@@ -1145,9 +1145,11 @@ table {
 	<span class="k">def</span> <span class="nf">printMatrixNotation</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supercellList</span><span class="p">,</span> <span class="n">maxAtoms</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Prints the list of supercells given to the output file using a matrix notation</span>
-<span class="sd">		for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;).</span>
+<span class="sd">		for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;). Returns the number of</span>
+<span class="sd">		supercells written to file.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		
+		<span class="n">nCombinations</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>		
 			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">supercellList</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">&lt;=</span> <span class="n">maxAtoms</span><span class="p">:</span>
@@ -1164,6 +1166,10 @@ table {
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_4</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_5</span><span class="p">))</span>
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">((</span><span class="s2">&quot;</span><span class="si">% 1.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">strain</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_6</span><span class="p">))</span>
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+					
+					<span class="n">nCombinations</span> <span class="o">+=</span> <span class="mi">1</span>
+					
+		<span class="k">return</span> <span class="n">nCombinations</span>
 			
 </pre></div>
 
@@ -1260,9 +1266,11 @@ table {
 	<span class="k">def</span> <span class="nf">printMatrixNotation</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supercellList</span><span class="p">,</span> <span class="n">maxAtoms</span><span class="p">):</span>
 		<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">		Prints the list of supercells given to the output file using a matrix notation</span>
-<span class="sd">		for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;).</span>
+<span class="sd">		for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;). Returns the number of</span>
+<span class="sd">		supercells written to file.</span>
 <span class="sd">		&quot;&quot;&quot;</span>
 		
+		<span class="n">nCombinations</span> <span class="o">=</span> <span class="mi">0</span>
 		<span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>		
 			<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">supercellList</span><span class="p">:</span>
 				<span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">&lt;=</span> <span class="n">maxAtoms</span><span class="p">:</span>
@@ -1279,6 +1287,10 @@ table {
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_4</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_5</span><span class="p">))</span>
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">((</span><span class="s2">&quot;</span><span class="si">% 1.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">strain</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_6</span><span class="p">))</span>
 					<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+					
+					<span class="n">nCombinations</span> <span class="o">+=</span> <span class="mi">1</span>
+					
+		<span class="k">return</span> <span class="n">nCombinations</span>
 </pre></div>
 
   </div>
@@ -1367,16 +1379,19 @@ table {
     
   
     <div class="desc"><p>Prints the list of supercells given to the output file using a matrix notation
-for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2').</p></div>
+for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2'). Returns the number of
+supercells written to file.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-clattices.Printer.Printer.printMatrixNotation', this);">Show source &equiv;</a></p>
   <div id="source-clattices.Printer.Printer.printMatrixNotation" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">printMatrixNotation</span> <span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">supercellList</span><span class="p">,</span> <span class="n">maxAtoms</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	Prints the list of supercells given to the output file using a matrix notation</span>
-<span class="sd">	for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;).</span>
+<span class="sd">	for the solutions (m1, m2, n1, n2) and (m1&#39;, m2&#39;, n1&#39;, n2&#39;). Returns the number of</span>
+<span class="sd">	supercells written to file.</span>
 <span class="sd">	&quot;&quot;&quot;</span>
 	
+	<span class="n">nCombinations</span> <span class="o">=</span> <span class="mi">0</span>
 	<span class="k">with</span> <span class="nb">open</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">outputFile</span><span class="p">,</span> <span class="s1">&#39;a&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>		
 		<span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">supercellList</span><span class="p">:</span>
 			<span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">nAtoms</span> <span class="o">&lt;=</span> <span class="n">maxAtoms</span><span class="p">:</span>
@@ -1393,6 +1408,10 @@ for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2').</p></div>
 				<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_4</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_5</span><span class="p">))</span>
 				<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">((</span><span class="s2">&quot;</span><span class="si">% 1.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="mi">100</span><span class="o">*</span><span class="n">s</span><span class="o">.</span><span class="n">strain</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">spaceCol_6</span><span class="p">))</span>
 				<span class="n">f</span><span class="o">.</span><span class="n">write</span> <span class="p">(</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+				
+				<span class="n">nCombinations</span> <span class="o">+=</span> <span class="mi">1</span>
+				
+	<span class="k">return</span> <span class="n">nCombinations</span>
 </pre></div>
 
   </div>
