@@ -73,9 +73,11 @@ class Printer (object):
 	def printMatrixNotation (self, supercellList, maxAtoms):
 		"""
 		Prints the list of supercells given to the output file using a matrix notation
-		for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2').
+		for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2'). Returns the number of
+		supercells written to file.
 		"""
 		
+		nCombinations = 0
 		with open (self.outputFile, 'a') as f:		
 			for s in supercellList:
 				if s.nAtoms <= maxAtoms:
@@ -92,4 +94,8 @@ class Printer (object):
 					f.write ("".rjust(self.spaceCol_4 + self.spaceCol_5))
 					f.write (("% 1.2f" % (100*s.strain[1])).rjust(self.spaceCol_6))
 					f.write ("\n\n")
+					
+					nCombinations += 1
+					
+		return nCombinations
 			

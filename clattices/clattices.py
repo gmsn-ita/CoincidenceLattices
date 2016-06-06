@@ -29,11 +29,33 @@ def parseArgs():
 	parser.add_argument('-n', '--n_atoms', type=int, default=100, help="maximum number of atoms inside the supercell (default: 100 atoms)")
 	
 	parser.add_argument('-l', '--label_size', type=int, default=20, help="spacing of the label in the first column of the output file (default: 20 chars)")
+	parser.add_argument('-q', '--quiet', action='store_true', help="do not display text on the output window (default: False)")
 	
 	return parser.parse_args()
+
+def printRunDescription (args, crystals, combinations):
+	'''
+	Print description of the options chosen and the crystals input.
+	'''
+	
+	leftJustSpace = 20
+	print ("Number of crystals:".ljust(leftJustSpace) + "%d" % len(crystals))
+	print ("Combinations:".ljust(leftJustSpace) +  "%d\n" % len(combinations))
+	print ("N:".ljust(leftJustSpace) + "%d" % args.N)
+	print ("angles:".ljust(leftJustSpace) + "from %.2f to %.2f deg" % (args.angles[0], args.angles[1]))
+	print ("angles_step:".ljust(leftJustSpace) + "%.2f deg" % args.angles_step)
+	print ("tolerance:".ljust(leftJustSpace) + "%2.2f" % args.tolerance)
+	print ("angle_tolerance:".ljust(leftJustSpace) + "%.2f" % args.angle_tolerance)
+	print ("n_atoms:".ljust(leftJustSpace) + "%d\n" % args.n_atoms)
+	
 	
 def main():
 	args = parseArgs()
+	
+	if not args.quiet:
+		print ("***********************")
+		print ("    clattices v1.0     ")
+		print ("***********************")
 	
 	# Creates a list with the 2D crystals
 	crystals = []
@@ -54,16 +76,25 @@ def main():
 			for j in range (i+1, len(crystals)):
 				combinations.append (Combination.Combination([crystals[i], crystals[j]], angles, [args.N, args.tolerance, args.angle_tolerance]))
 
+	if not args.quiet:
+		printRunDescription (args, crystals, combinations)
+		print ("Finding coincidence lattices for the following bilayer system%s:" % ('' if len(combinations) == 1 else 's'))
+	
 	supercellCombinationsList = []
 	# Solve all combinations
 	for c in combinations:
-		print ("%s/%s" % (c.crystal_1.label, c.crystal_2.label))
+		if not args.quiet:
+			print ("%s/%s" % (c.crystal_1.label, c.crystal_2.label))
 		c.findSolutions()
 		supercellCombinationsList.append (c.findMinimumArea())
 	
 	# Print everything
 	p = Printer.Printer (args.output_file, labelSpacing=args.label_size)
+	nCoincidences = 0
 	
 	p.printMatrixNotationHeader()
 	for s in supercellCombinationsList:
-		p.printMatrixNotation(s, args.n_atoms)
+		nCoincidences += p.printMatrixNotation(s, args.n_atoms)
+	
+	if not args.quiet:
+		print ("\n%d coincidence lattice%s found\n" % (nCoincidences, '' if nCoincidences == 1 else 's'))

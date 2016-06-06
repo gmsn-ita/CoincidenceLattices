@@ -327,10 +327,10 @@ class Combination (object):
 					angleVectors = np.arccos(cosAngleVectors)*180/np.pi
 					
 					if self.crystal_1.bravaisLattice == "hexagonal" and self.crystal_2.bravaisLattice == "hexagonal":
-						if  area >= 1 and area < minArea and abs(angleVectors - 60) < self.tolerance:
+						if  area >= 1 and area <= minArea and abs(angleVectors - 60) < self.tolerance:
 							minArea = area
 							minAreaPair = [s.solutions[i], s.solutions[j]]
-					elif  area >= 1 and area < minArea:
+					elif  area >= 1 and area <= minArea:
 						minArea = area
 						minAreaPair = [s.solutions[i], s.solutions[j]]
 			
