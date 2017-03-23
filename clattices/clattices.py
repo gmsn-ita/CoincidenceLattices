@@ -31,6 +31,8 @@ def parseArgs():
 	parser.add_argument('-l', '--label_size', type=int, default=20, help="spacing of the label in the first column of the output file (default: 20 chars)")
 	parser.add_argument('-q', '--quiet', action='store_true', help="do not display text on the output window (default: False)")
 	
+	parser.add_argument('-r', '--first', action='store_true', help="investigate only combinations with the first crystal (default: False)")
+	
 	return parser.parse_args()
 
 def printRunDescription (args, crystals, combinations):
@@ -68,11 +70,11 @@ def main():
 	# Creates a list of combinations for each pair of crystals
 	combinations = []
 	if args.self_combinations:
-		for i in range (len(crystals)):
+		for i in range (len(crystals) if not args.first else 1):
 			for j in range (i, len(crystals)):
 				combinations.append (Combination.Combination([crystals[i], crystals[j]], angles, [args.N, args.tolerance, args.angle_tolerance]))
 	else:
-		for i in range (len(crystals)):
+		for i in range (len(crystals) if not args.first else 1):
 			for j in range (i+1, len(crystals)):
 				combinations.append (Combination.Combination([crystals[i], crystals[j]], angles, [args.N, args.tolerance, args.angle_tolerance]))
 
