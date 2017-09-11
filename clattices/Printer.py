@@ -99,3 +99,67 @@ class Printer (object):
 					
 		return nCombinations
 			
+
+class LaTeX_printer (object):
+	"""
+	Base class to print all information from the investigation to the output.
+	
+	All information is written to the default output file passed as parameter.
+	"""
+	
+	def __init__ (self, outputFile):
+		"""
+		Initializes the printer with useful information, such as the output file and the size of the labels.
+		"""
+		
+		self.outputFile = outputFile
+		"""
+		Output file to be written.
+		"""
+
+
+	def printArticleHeader (self):
+		"""
+		Prints the end of the LaTeX article to visualize the table
+		"""
+		
+		with open (self.outputFile, 'w') as f:
+			f.write ("\n\n")
+
+	def printArticleEnd (self):
+		"""
+		Prints the end of the LaTeX template to create the table
+		"""
+		
+		with open (self.outputFile, 'w') as f:
+			f.write ("\n\n")
+
+		
+	def printTable (self, supercellList, maxAtoms):
+		"""
+		Prints the list of supercells given to the output file using a matrix notation
+		for the solutions (m1, m2, n1, n2) and (m1', m2', n1', n2'). Returns the number of
+		supercells written to file.
+		"""
+		
+		nCombinations = 0
+		with open (self.outputFile, 'a') as f:		
+			for s in supercellList:
+				if s.nAtoms <= maxAtoms:
+					f.write (("%s/%s" % (s.label_1, s.label_2)).ljust(self.spaceCol_1) )
+					f.write (("[% 4d  % 4d]" % (s.solutions[0][0], s.solutions[1][0])).rjust(self.spaceCol_2))
+					f.write (("[% 4d  % 4d]" % (s.solutions[0][2], s.solutions[1][2])).rjust(self.spaceCol_3))
+					f.write (("%2.1f" % s.angle).rjust(self.spaceCol_4))
+					f.write (("%d" % s.nAtoms).rjust(self.spaceCol_5))
+					f.write (("% 1.2f" % (100*s.strain[0])).rjust(self.spaceCol_6))
+					f.write ("\n")
+					f.write ("".rjust(self.spaceCol_1))
+					f.write (("[% 4d  % 4d]" % (s.solutions[0][1], s.solutions[1][1])).rjust(self.spaceCol_2))
+					f.write (("[% 4d  % 4d]" % (s.solutions[0][3], s.solutions[1][3])).rjust(self.spaceCol_3))
+					f.write ("".rjust(self.spaceCol_4 + self.spaceCol_5))
+					f.write (("% 1.2f" % (100*s.strain[1])).rjust(self.spaceCol_6))
+					f.write ("\n\n")
+					
+					nCombinations += 1
+					
+		return nCombinations
